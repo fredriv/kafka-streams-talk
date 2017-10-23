@@ -11,4 +11,5 @@ do
   echo .
 done
 
-~/opt/kafka/bin/kafka-topics.sh --create --topic ArticleReads --partitions 1 --replication-factor 1 --if-not-exists --zookeeper localhost:32181
+~/opt/kafka/bin/kafka-topics.sh --create --topic ArticlesReads --partitions 1 --replication-factor 1 --if-not-exists --zookeeper localhost:32181
+~/opt/kafka/bin/kafka-topics.sh --create --topic ArticlesReadsCounts --partitions 1 --replication-factor 1 --if-not-exists --zookeeper localhost:32181
