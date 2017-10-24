@@ -1,11 +1,12 @@
 package com.schibsted.kafkastreamstalk
 
+import java.lang
 import java.util.concurrent.TimeUnit
 
 import com.fasterxml.jackson.databind.JsonNode
 import org.apache.kafka.common.serialization.Serdes
-import org.apache.kafka.streams.kstream.{KStream, KStreamBuilder}
-import org.apache.kafka.streams.{KafkaStreams, StreamsConfig}
+import org.apache.kafka.streams.kstream.{KStream, KStreamBuilder, KTable}
+import org.apache.kafka.streams.{KafkaStreams, KeyValue, StreamsConfig}
 
 object ArticlesApplication {
 
@@ -14,20 +15,24 @@ object ArticlesApplication {
 
     val config = Map(
       StreamsConfig.APPLICATION_ID_CONFIG -> "ArticlesApp",
-      StreamsConfig.BOOTSTRAP_SERVERS_CONFIG -> "localhost:29092"
+      StreamsConfig.BOOTSTRAP_SERVERS_CONFIG -> "localhost:29092",
+      StreamsConfig.COMMIT_INTERVAL_MS_CONFIG -> "5000"
     )
 
     val builder = new KStreamBuilder
-    val articles: KStream[String, JsonNode] = builder.stream(Serdes.String(), new JsonNodeSerde, "Articles")
+    val strings = Serdes.String()
+    val json = new JsonNodeSerde
 
-    articles.filter((key, value) => value.get("site").asText == "bbc").print()
+    val articles: KStream[String, JsonNode] = builder.stream(strings, json, "Articles")
+
     val bbcTitles = articles
       .filter((key, value) => value.get("site").asText == "bbc")
       .mapValues[String](value => value.get("title").asText)
 
-    bbcTitles.to(Serdes.String(), Serdes.String(), "BBC-Titles")
+    bbcTitles.to(strings, strings, "BBC-Titles")
 
     val streams = new KafkaStreams(builder, new StreamsConfig(config.asJava))
+    streams.cleanUp()
     streams.start()
 
     Runtime.getRuntime.addShutdownHook(new Thread(() =>

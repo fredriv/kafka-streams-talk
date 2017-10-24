@@ -11,7 +11,7 @@ class JsonNodeSerde extends Serde[JsonNode] {
   private val mapper = new ObjectMapper()
 
   override val deserializer = new Deserializer[JsonNode] {
-    override def deserialize(topic: String, data: Array[Byte]): JsonNode = mapper.readTree(data)
+    override def deserialize(topic: String, data: Array[Byte]): JsonNode = Option(data).map(mapper.readTree).orNull
     override def configure(configs: util.Map[String, _], isKey: Boolean): Unit = {}
     override def close(): Unit = {}
   }
