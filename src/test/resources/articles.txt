@@ -1,6 +1,8 @@
-1:Soldier's widow: Trump made me cry
-2:Catalans 'won't follow Madrid's orders'
-3:Weinstein Co faces civil rights inquiry
-4:Russian radio presenter stabbed in the neck
-5:Ronaldo wins Fifa best men's player award
-6:245 people jump off a bridge together
+1:{"site":"bbc","title":"Xi Jinping 'most powerful Chinese leader since Mao Zedong'","url":"http://www.bbc.com/news/world-asia-china-41730948"}
+2:{"site":"bbc","title":"Harvey Weinstein: British assistant 'paid £125k for silence'","url":"http://www.bbc.com/news/uk-41730109"}
+3:{"site":"bbc","title":"Astrolabe: Shipwreck find 'earliest navigation tool'","url":"http://www.bbc.com/news/science-environment-41724022"}
+4:{"site":"cnn","title":"Top US general reveals new info on Niger ambush","url":"http://edition.cnn.com/2017/10/23/politics/dunford-niger-ambush-briefing/index.html"}
+5:{"site":"cnn","title":"Stephen Hawking's thesis crashed Cambridge University's website","url":"http://edition.cnn.com/2017/10/23/europe/stephen-hawking-thesis/index.html"}
+6:{"site":"cnn","title":"Europe's first underwater restaurant to open in Norway","url":"http://edition.cnn.com/style/article/snohetta-underwater-restaurant/index.html"}
+7:{"site":"foxnews","title":"North Korea inching closer to nuclear war amid rising tensions, Japan official says","url":"http://www.foxnews.com/world/2017/10/23/north-korea-threats-at-unprecedented-critical-level-japan-official-says.html"}
+8:{"site":"foxnews","title":"Trump fan, 9, gets special gift after donating $3 to help president pay his bills","url":"http://www.foxnews.com/us/2017/10/23/boys-3-donation-to-trump-gets-him-surprise-gift.html"}
