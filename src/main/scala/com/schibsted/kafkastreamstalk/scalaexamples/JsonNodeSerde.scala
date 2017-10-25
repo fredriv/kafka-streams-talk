@@ -1,6 +1,5 @@
-package com.schibsted.kafkastreamstalk
+package com.schibsted.kafkastreamstalk.scalaexamples
 
-import java.io.ByteArrayInputStream
 import java.util
 
 import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}

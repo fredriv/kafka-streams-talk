@@ -1,4 +1,4 @@
-package com.schibsted.kafkastreamstalk
+package com.schibsted.kafkastreamstalk.scalaexamples
 
 import java.lang
 import java.util.Properties
@@ -6,8 +6,8 @@ import java.util.concurrent.TimeUnit
 
 import com.fasterxml.jackson.databind.JsonNode
 import org.apache.kafka.common.serialization.Serdes
+import org.apache.kafka.streams.kstream.{KStream, KStreamBuilder, KTable}
 import org.apache.kafka.streams.{KafkaStreams, StreamsConfig}
-import org.apache.kafka.streams.kstream.{KStream, KStreamBuilder, KTable, Windows}
 
 object ArticleCountApplication {
 
