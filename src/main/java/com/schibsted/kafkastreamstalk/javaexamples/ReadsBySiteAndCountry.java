@@ -30,16 +30,17 @@ public class ReadsBySiteAndCountry {
         Properties config = new Properties();
         config.put(StreamsConfig.APPLICATION_ID_CONFIG, "ReadsBySiteAndCountry");
         config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:29092");
+        config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
+        config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JsonNodeSerde.class);
         config.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, "5000");
 
         KStreamBuilder builder = new KStreamBuilder();
 
         Serde<String> strings = Serdes.String();
         Serde<Long> longs = Serdes.Long();
-        JsonNodeSerde json = new JsonNodeSerde();
 
-        KTable<String, JsonNode> articles = builder.table(strings, json, "Articles");
-        KTable<String, JsonNode> users = builder.table(strings, json, "Users");
+        KTable<String, JsonNode> articles = builder.table("Articles");
+        KTable<String, JsonNode> users = builder.table("Users");
         KStream<String, String> articleReads = builder.stream(strings, strings, "ArticleReads");
 
         KeyValueMapper<String, UserRead, KeyValue<String, Long>> siteCountryMapper =
@@ -49,12 +50,10 @@ public class ReadsBySiteAndCountry {
                     return KeyValue.pair(site + "-" + country, 1L);
                 };
 
-        KStream<String, JsonNode> userReads = articleReads
+        KTable<String, Long> readsBySiteAndCountry = articleReads
                 .join(users, (articleId, user) -> new UserRead(user, articleId, null), strings, strings)
-                .map((key, value) -> KeyValue.pair(value.articleId, value.user));
-
-        KTable<String, Long> readsBySiteAndCountry = userReads
-                .join(articles, (user, article) -> new UserRead(user, null, article), strings, json)
+                .map((key, value) -> KeyValue.pair(value.articleId, value.user))
+                .join(articles, (user, article) -> new UserRead(user, null, article))
                 .map(siteCountryMapper)
                 .groupByKey(strings, longs)
                 .count();

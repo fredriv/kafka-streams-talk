@@ -12,17 +12,6 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 public class ReadsByCountry {
-    static class UserRead {
-        public final JsonNode user;
-        public final String articleId;
-        public final JsonNode article;
-        public UserRead(JsonNode user, String articleId, JsonNode article) {
-            this.user = user;
-            this.articleId = articleId;
-            this.article = article;
-        }
-    }
-
     public static void main(String[] args) {
         Properties config = new Properties();
         config.put(StreamsConfig.APPLICATION_ID_CONFIG, "ReadsByCountry");
@@ -39,8 +28,8 @@ public class ReadsByCountry {
         KStream<String, String> articleReads = builder.stream(strings, strings, "ArticleReads");
 
         KTable<String, Long> readsByCountry = articleReads
-                .join(users, (articleId, user) -> user)
-                .groupBy((key, value) -> value.get("country").asText())
+                .join(users, (articleId, user) -> user.get("country"))
+                .groupBy((userId, country) -> country.asText())
                 .count();
 
         readsByCountry.toStream().print();
