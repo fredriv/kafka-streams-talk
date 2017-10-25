@@ -32,8 +32,6 @@ public class ReadsByCountry {
         KStreamBuilder builder = new KStreamBuilder();
 
         Serde<String> strings = Serdes.String();
-        Serde<Long> longs = Serdes.Long();
-
         JsonNodeSerde json = new JsonNodeSerde();
 
         KTable<String, JsonNode> users = builder.table(strings, json, "Users");

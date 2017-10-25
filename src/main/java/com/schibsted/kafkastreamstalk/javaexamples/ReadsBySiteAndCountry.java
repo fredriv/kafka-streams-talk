@@ -36,7 +36,6 @@ public class ReadsBySiteAndCountry {
 
         Serde<String> strings = Serdes.String();
         Serde<Long> longs = Serdes.Long();
-
         JsonNodeSerde json = new JsonNodeSerde();
 
         KTable<String, JsonNode> articles = builder.table(strings, json, "Articles");
