@@ -18,20 +18,19 @@ public class ArticleCountBySite {
         Properties config = new Properties();
         config.put(StreamsConfig.APPLICATION_ID_CONFIG, "ArticleCountBySite");
         config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:29092");
+        config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
+        config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JsonNodeSerde.class);
         config.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, "5000");
 
         KStreamBuilder builder = new KStreamBuilder();
 
-        Serde<String> strings = Serdes.String();
-        JsonNodeSerde json = new JsonNodeSerde();
-
-        KStream<String, JsonNode> articles = builder.stream(strings, json, "Articles");
+        KStream<String, JsonNode> articles = builder.stream("Articles");
 
         KGroupedStream<String, JsonNode> grouped = articles
-                .groupBy((key, value) -> value.get("site").asText(), strings, json);
+                .groupBy((key, value) -> value.get("site").asText());
 
         KTable<String, Long> articlesBySite = articles
-                .groupBy((key, value) -> value.get("site").asText(), strings, json)
+                .groupBy((key, value) -> value.get("site").asText())
                 .count();
 
         articlesBySite.toStream().print();

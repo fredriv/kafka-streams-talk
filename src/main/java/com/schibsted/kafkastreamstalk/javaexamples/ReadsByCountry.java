@@ -27,19 +27,20 @@ public class ReadsByCountry {
         Properties config = new Properties();
         config.put(StreamsConfig.APPLICATION_ID_CONFIG, "ReadsByCountry");
         config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:29092");
+        config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
+        config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JsonNodeSerde.class);
         config.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, "5000");
 
         KStreamBuilder builder = new KStreamBuilder();
 
         Serde<String> strings = Serdes.String();
-        JsonNodeSerde json = new JsonNodeSerde();
 
-        KTable<String, JsonNode> users = builder.table(strings, json, "Users");
+        KTable<String, JsonNode> users = builder.table("Users");
         KStream<String, String> articleReads = builder.stream(strings, strings, "ArticleReads");
 
         KTable<String, Long> readsByCountry = articleReads
-                .join(users, (articleId, user) -> user, strings, strings)
-                .groupBy((key, value) -> value.get("country").asText(), strings, json)
+                .join(users, (articleId, user) -> user)
+                .groupBy((key, value) -> value.get("country").asText())
                 .count();
 
         readsByCountry.toStream().print();
